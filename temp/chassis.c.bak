@@ -1,0 +1,133 @@
+//
+// Created by mu4di on 25-5-16.
+//
+
+// 确保先包含HAL和CMSIS头文件
+#include "stm32f4xx_hal.h"
+#include "stm32f4xx_hal_gpio.h"
+#include "main.h"
+#include "tim.h"
+#include "gpio.h"
+
+#include "chassis.h"
+#include <stdio.h>
+#include "bsp_pid.h"
+#include "tim.h"
+
+
+// 电机1定义
+Motor_HandleTypeDef motor1 = {
+    .htim = &htim3,
+    .channel = TIM_CHANNEL_1,
+    .IN1_Port = ((GPIO_TypeDef *) GPIOF_BASE),
+    .IN1_Pin = GPIO_PIN_0,
+    .IN2_Port = ((GPIO_TypeDef *) GPIOF_BASE),
+    .IN2_Pin = GPIO_PIN_1,
+    .STBY_Port = NULL,
+    .STBY_Pin = 0,
+    .pwm_max = 1000
+};
+
+// 电机2定义
+Motor_HandleTypeDef motor2 = {
+    .htim = &htim3,
+    .channel = TIM_CHANNEL_2,
+    .IN1_Port = GPIOF,
+    .IN1_Pin = GPIO_PIN_2,
+    .IN2_Port = GPIOF,
+    .IN2_Pin = GPIO_PIN_3,
+    .STBY_Port = NULL,
+    .STBY_Pin = 0,
+    .pwm_max = 1000
+};
+
+// 电机3定义
+Motor_HandleTypeDef motor3 = {
+    .htim = &htim3,
+    .channel = TIM_CHANNEL_3,
+    .IN1_Port = GPIOF,
+    .IN1_Pin = GPIO_PIN_4,
+    .IN2_Port = GPIOF,
+    .IN2_Pin = GPIO_PIN_5,
+    .STBY_Port = NULL,
+    .STBY_Pin = 0,
+    .pwm_max = 1000
+};
+
+// 电机4定义
+Motor_HandleTypeDef motor4 = {
+    .htim = &htim3,
+    .channel = TIM_CHANNEL_4,
+    .IN1_Port = GPIOF,
+    .IN1_Pin = GPIO_PIN_6,
+    .IN2_Port = GPIOF,
+    .IN2_Pin = GPIO_PIN_7,
+    .STBY_Port = NULL,
+    .STBY_Pin = 0,
+    .pwm_max = 1000
+};
+
+// 编码器定义
+Encoder_HandleTypeDef encoder1 = {
+    .htim = &htim1
+};
+Encoder_HandleTypeDef encoder2 = {
+    .htim = &htim2
+};
+Encoder_HandleTypeDef encoder3 = {
+    .htim = &htim4
+};
+Encoder_HandleTypeDef encoder4 = {
+    .htim = &htim8
+};
+
+// 电机PID控制器
+WheelSpeedController_TypeDef wheelController1;
+WheelSpeedController_TypeDef wheelController2;
+WheelSpeedController_TypeDef wheelController3;
+WheelSpeedController_TypeDef wheelController4;
+
+
+// 初始化电机PID控制
+void Chassis_Motor_PIDControl_Init(void)
+{
+    // 初始化轮子速度控制器
+    WheelSpeed_Init(&wheelController1, &motor1, &encoder1, MOTOR_PID_KP, MOTOR_PID_KI, MOTOR_PID_KD);
+    WheelSpeed_Init(&wheelController2, &motor2, &encoder2, MOTOR_PID_KP, MOTOR_PID_KI, MOTOR_PID_KD);
+    WheelSpeed_Init(&wheelController3, &motor3, &encoder3, MOTOR_PID_KP, MOTOR_PID_KI, MOTOR_PID_KD);
+    WheelSpeed_Init(&wheelController4, &motor4, &encoder4, MOTOR_PID_KP, MOTOR_PID_KI, MOTOR_PID_KD);
+
+    // 停止电机
+    WheelSpeed_Stop(&wheelController1);
+    WheelSpeed_Stop(&wheelController2);
+    WheelSpeed_Stop(&wheelController3);
+    WheelSpeed_Stop(&wheelController4);
+
+    printf("Motor PID Control Initialized\r\n");
+}
+
+// 设置电机目标速度
+void Chassis_Motor_SetSpeed(float speed1,float speed2,float speed3,float speed4)
+{
+    WheelSpeed_SetTarget(&wheelController1, -speed1);
+    WheelSpeed_SetTarget(&wheelController2, speed2);
+    WheelSpeed_SetTarget(&wheelController3, speed3);
+    WheelSpeed_SetTarget(&wheelController4, -speed4);
+    printf("Motor target speed set to: 左前%.2f，左后%.2f，右前%.2f，右后%.2f\r\n", speed1,speed2,speed4,speed3);
+}
+
+// 停止电机
+void Chassis_Motor_Stop(void)
+{
+    WheelSpeed_Stop(&wheelController1);
+    WheelSpeed_Stop(&wheelController2);
+    WheelSpeed_Stop(&wheelController3);
+    WheelSpeed_Stop(&wheelController4);
+    printf("Motor stopped\r\n");
+}
+
+// 获取当前速度
+float Chassis_Motor_GetCurrentSpeed(void)
+{
+    return wheelController1.current_speed;
+}
