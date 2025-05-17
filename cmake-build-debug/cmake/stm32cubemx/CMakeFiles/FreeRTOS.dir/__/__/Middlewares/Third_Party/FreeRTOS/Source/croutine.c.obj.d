@@ -1,0 +1,20 @@
+cmake/stm32cubemx/CMakeFiles/FreeRTOS.dir/__/__/Middlewares/Third_Party/FreeRTOS/Source/croutine.c.obj: \
+ C:\Users\mu4dian\Desktop\zgt6test\Middlewares\Third_Party\FreeRTOS\Source\croutine.c \
+ C:\Users\mu4dian\Desktop\zgt6test\Middlewares\Third_Party\FreeRTOS\Source\include/FreeRTOS.h \
+ d:\toolchain\gun_arm_embedded\lib\gcc\arm-none-eabi\10.3.1\include\stddef.h \
+ d:\toolchain\gun_arm_embedded\lib\gcc\arm-none-eabi\10.3.1\include\stdint.h \
+ d:\toolchain\gun_arm_embedded\arm-none-eabi\include\stdint.h \
+ d:\toolchain\gun_arm_embedded\arm-none-eabi\include\machine\_default_types.h \
+ d:\toolchain\gun_arm_embedded\arm-none-eabi\include\sys\features.h \
+ d:\toolchain\gun_arm_embedded\arm-none-eabi\include\_newlib_version.h \
+ d:\toolchain\gun_arm_embedded\arm-none-eabi\include\sys\_intsup.h \
+ d:\toolchain\gun_arm_embedded\arm-none-eabi\include\sys\_stdint.h \
+ C:\Users\mu4dian\Desktop\zgt6test\Core\Inc/FreeRTOSConfig.h \
+ C:\Users\mu4dian\Desktop\zgt6test\Middlewares\Third_Party\FreeRTOS\Source\include/projdefs.h \
+ C:\Users\mu4dian\Desktop\zgt6test\Middlewares\Third_Party\FreeRTOS\Source\include/portable.h \
+ C:\Users\mu4dian\Desktop\zgt6test\Middlewares\Third_Party\FreeRTOS\Source\include/deprecated_definitions.h \
+ C:\Users\mu4dian\Desktop\zgt6test\Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM4F/portmacro.h \
+ C:\Users\mu4dian\Desktop\zgt6test\Middlewares\Third_Party\FreeRTOS\Source\include/mpu_wrappers.h \
+ C:\Users\mu4dian\Desktop\zgt6test\Middlewares\Third_Party\FreeRTOS\Source\include/task.h \
+ C:\Users\mu4dian\Desktop\zgt6test\Middlewares\Third_Party\FreeRTOS\Source\include/list.h \
+ C:\Users\mu4dian\Desktop\zgt6test\Middlewares\Third_Party\FreeRTOS\Source\include/croutine.h
