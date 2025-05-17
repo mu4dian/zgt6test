@@ -1,6 +1,8 @@
 #include "task_motor.h"
 
+#include <i2c.h>
 #include <stdio.h>
+#include <usart.h>
 
 #include "app_music.h"
 #include "bsp_imu_mpu6050.h"
@@ -40,59 +42,70 @@ void App_IMU_Update(void) {
 // VL53L0X_HandleTypedef tof;
 
 
-void i2c_scan() {
-    printf("I2C scan...\r\n");
-    for(uint8_t addr = 1; addr < 127; addr++) {
-        if(HAL_I2C_IsDeviceReady(&hi2c2, addr << 1, 2, 2) == HAL_OK) {
-            printf("Device found at 0x%02X\r\n", addr << 1);
-        }
-        HAL_Delay(10);
-    }
-}
+// void i2c_scan() {
+//     printf("I2C scan...\r\n");
+//     for(uint8_t addr = 1; addr < 127; addr++) {
+//         if(HAL_I2C_IsDeviceReady(&hi2c2, addr << 1, 2, 2) == HAL_OK) {
+//             printf("Device found at 0x%02X\r\n", addr << 1);
+//         }
+//         HAL_Delay(10);
+//     }
+// }
 
-extern I2C_HandleTypeDef hi2c2;
 
 // 电机控制任务
 void MotorTask(void *argument)
 {
-    uint16_t dist = 0;
 
-    // VL53L0X初始化，第二个参数为I2C句柄
-    if (!initVL53L0X(1, &hi2c2)) { // 1 表示 2V8 模式，大部分VL53L0X模块可用
-        printf("VL53L0X 初始化失败！\r\n");
-        while (1);
-    }
-    setTimeout(200); // 设置超时时间200ms（可选）
-    printf("VL53L0X 初始化成功，开始测距...\r\n");
-
-    // 初始化电机PID控制
     Chassis_Motor_PIDControl_Init();
 
-    // uint16_t dist = 0;
-    // if (VL53L0X_Init(&tof, &hi2c2, 0x52) == 0)
-    //     printf("VL53L0X 初始化成功！\r\n");
-    // else
-    //     printf("VL53L0X 初始化失败\r\n");
+    Boot_Sound();
 
-    // 设置一个初始测试速度（可以根据需要修改）
-    // 比如设置目标速度为100个脉冲每周期
-    App_IMU_Init();
-    // Boot_Sound();
-    uint32_t lastWakeTime = osKernelGetTickCount();
-    initVL53L0X(1, &hi2c1);
-    // 不设置任何花里胡哨的参数
-    setMeasurementTimingBudget(33000);
-    HAL_Delay(100);
+    char msgBuffer[52];
+    for (uint8_t i = 0; i < 52; i++) {
+        msgBuffer[i] = ' ';
+    }
+
+    // Initialise the VL53L0X
+    statInfo_t_VL53L0X distanceStr;
+    initVL53L0X(1, &hi2c2);
+
+    // Configure the sensor for high accuracy and speed in 20 cm.
+    setSignalRateLimit(200);
+    setVcselPulsePeriod(VcselPeriodPreRange, 10);
+    setVcselPulsePeriod(VcselPeriodFinalRange, 14);
+    setMeasurementTimingBudget(300 * 1000UL);
+
+
+    // 初始化VL53L0X，第二个参数1为2V8模式，大多数模块都支持
+    if (!initVL53L0X(1, &hi2c2)) {
+        printf("VL53L0X初始化失败\r\n");
+
+    }
+    printf("VL53L0X初始化成功\r\n");
+
+    setMeasurementTimingBudget(33000); // 33ms标准测距
+
+    uint16_t distance;
     // 主循环
     for (;;)
     {
+        // distance = readRangeSingleMillimeters(&distanceStr);
+        //
+        // if (timeoutOccurred() || distance > 2000) { // 超过2米判异常
+        //     printf("测距失败/超出范围\r\n");
+        // } else {
+        //     printf("距离: %u mm\r\n", distance);
+        // }
+        // HAL_Delay(100); // 10Hz输出
+
         // uint16_t distance = readRangeSingleMillimeters(NULL);
         // if (timeoutOccurred() || distance > 2000) {  // 大于2米都是异常
         //     printf("测距失败或超出范围\r\n");
         // } else {
         //     printf("距离: %u mm\r\n", distance);
         // }
-        HAL_Delay(100);
+        // HAL_Delay(100);
         // i2c_scan();
         // if (VL53L0X_ReadRangeMM(&tof, &dist) == 0) {
         //     printf("距离: %d mm\r\n", dist);
@@ -112,8 +125,9 @@ void MotorTask(void *argument)
         //            ax, ay, az, gx, gy, gz, mpu.temp_deg);
         // }
         // LineFollow_Task();
+        // Music_Play();
         osDelay(1); // 20ms扫描一次
-        // Chassis_Motor_SetSpeed(10.0f,10.0,10.0f,10.0f);
+        // Chassis_Motor_SetSpeed(0.0f,0.0,0.0f,0.0f);
         // printf("%.2f,%.2f\n",wheelController1.target_speed,wheelController1.current_speed);
         // // 打印调试信息
         // printf("Motor Speed - Target: %.2f, Current: %.2f, Output: %.2f\r\n",
