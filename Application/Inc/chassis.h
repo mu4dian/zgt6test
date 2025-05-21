@@ -16,7 +16,7 @@
 
 // 电机控制相关函数声明
 void Chassis_Motor_PIDControl_Init(void);
-void Chassis_Motor_SetSpeed(float speed1,float speed2,float speed3,float speed4);
+void Chassis_Motor_SetSpeed(float lf_speed, float lb_speed, float rf_speed, float rb_speed);
 void Chassis_Motor_Stop(void);
 float Chassis_Motor_GetCurrentSpeed(void);
 

@@ -64,6 +64,10 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
         Application/Src/line_follow.c
         Application/Src/app_music.c
         Application/Src/key_test.c
+        Application/Src/imu_output.c
+        Application/Src/tof_output.c
+        Application/Src/chassis_app.c
+        Application/Src/app_imu_pose.c
         External/VL53L0X/Src/VL53L0X.c
 )
 

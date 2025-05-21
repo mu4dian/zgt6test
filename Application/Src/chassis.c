@@ -99,12 +99,12 @@ void Chassis_Motor_PIDControl_Init(void)
 }
 
 // 设置电机目标速度
-void Chassis_Motor_SetSpeed(float speed1, float speed2, float speed3, float speed4)
+void Chassis_Motor_SetSpeed(float lf_speed, float lb_speed, float rf_speed, float rb_speed)
 {
-    WheelSpeed_SetTarget(&wheelController1, speed1);
-    WheelSpeed_SetTarget(&wheelController2, speed2);
-    WheelSpeed_SetTarget(&wheelController3, speed3);
-    WheelSpeed_SetTarget(&wheelController4, speed4);
+    WheelSpeed_SetTarget(&wheelController1, lf_speed);
+    WheelSpeed_SetTarget(&wheelController2, lb_speed);
+    WheelSpeed_SetTarget(&wheelController3, rb_speed);
+    WheelSpeed_SetTarget(&wheelController4, rf_speed);
 
     WheelSpeed_Update(&wheelController1);
     WheelSpeed_Update(&wheelController2);

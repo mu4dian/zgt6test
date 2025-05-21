@@ -2,20 +2,21 @@
 #include "line_follow.h"
 #include <stdio.h>
 
+#include "chassis.h"
+
 /**
  * 这里给出一个简单加权平均算法：
  * 传感器排列为  X1 X2 X3 X4 X5 X6 X7 X8  （假设 X1最左，X8最右）
  * 检测到的为黑线（低电平为黑线），用加权平均求出偏移量，调整速度
  */
-extern void Chassis_Motor_SetSpeed(float speed1, float speed2, float speed3, float speed4); // 你的底盘接口
 
-#define BASE_SPEED  50  // 推荐巡线基础速度百分比
-#define TURN_GAIN   100  // 差速调整幅度
+#define BASE_SPEED  70  // 推荐巡线基础速度百分比
+#define TURN_GAIN   60  // 差速调整幅度
 
 void LineFollow_Task(void)
 {
     IRTracker_Data_t ir_data;
-    int weight[8] = {0, -13, -9, -5, 5, 9, 13, 16};
+    int weight[8] = {16, -13, -9, -5, 5, 9, 13, 16};
     int sum = 0, cnt = 0;
     int position = 0; // 负值偏左，正值偏右
 
@@ -29,7 +30,7 @@ void LineFollow_Task(void)
     }
     if(cnt == 0){
         // 全部检测不到，说明偏出赛道，紧急停车
-        Chassis_Motor_SetSpeed(0, 0, 0, 0);
+        Chassis_Motor_SetSpeed(10, 10, 10, 10);
         return;
     }
     position = sum / cnt;

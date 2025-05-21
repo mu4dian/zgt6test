@@ -4,40 +4,24 @@
 #include <stdio.h>
 #include <usart.h>
 
+#include "app_imu_pose.h"
 #include "app_music.h"
 #include "bsp_imu_mpu6050.h"
 #include "bsp_tof.h"
+#include "chassis_app.h"
 #include "key_test.h"
 #include "line_follow.h"
+#include "tof_output.h"
 #include "VL53L0X.h"
-
+#include "app_imu_pose.h"
+#include "imu_output.h"
+IMU_Pose_t car_pose;
 // 调试计数
 uint8_t i = 0;
 
 
 #include "bsp_imu_mpu6050.h"
-extern I2C_HandleTypeDef hi2c1; // 由CubeMX自动生成
 
-MPU6050_HandleTypeDef mpu; // 声明全局/静态变量
-
-void App_IMU_Init(void) {
-    mpu.hi2c = &hi2c1;
-    // mpu.addr 不用管，Init里自动赋值
-    uint8_t ret = MPU6050_Init(&mpu);
-    if (ret) {
-        // 初始化失败，自己加个报错提示
-    }
-}
-
-void App_IMU_Update(void) {
-    if (MPU6050_ReadRaw(&mpu) == 0) {
-        float ax, ay, az, gx, gy, gz;
-        MPU6050_GetAccelGyro(&mpu, &ax, &ay, &az, &gx, &gy, &gz);
-        // ax,ay,az 单位 g   gx,gy,gz 单位 deg/s
-        // mpu.temp_deg 单位 摄氏度
-        // 直接用你的数据做姿态解算、运动控制啥的
-    }
-}
 
 // VL53L0X_HandleTypedef tof;
 
@@ -51,6 +35,7 @@ void App_IMU_Update(void) {
 //         HAL_Delay(10);
 //     }
 // }
+extern MPU6050_HandleTypeDef mpu;
 
 
 // 电机控制任务
@@ -58,47 +43,32 @@ void MotorTask(void *argument)
 {
 
     Chassis_Motor_PIDControl_Init();
+    // Chassis_RunCircle(0.5f, 0.1f);
+    App_IMU_Init();
 
-    Boot_Sound();
+    // Boot_Sound();
 
-    char msgBuffer[52];
-    for (uint8_t i = 0; i < 52; i++) {
-        msgBuffer[i] = ' ';
-    }
-
-    // Initialise the VL53L0X
-    statInfo_t_VL53L0X distanceStr;
-    initVL53L0X(1, &hi2c2);
-
-    // Configure the sensor for high accuracy and speed in 20 cm.
-    setSignalRateLimit(200);
-    setVcselPulsePeriod(VcselPeriodPreRange, 10);
-    setVcselPulsePeriod(VcselPeriodFinalRange, 14);
-    setMeasurementTimingBudget(300 * 1000UL);
-
-
-    // 初始化VL53L0X，第二个参数1为2V8模式，大多数模块都支持
-    if (!initVL53L0X(1, &hi2c2)) {
-        printf("VL53L0X初始化失败\r\n");
-
-    }
-    printf("VL53L0X初始化成功\r\n");
-
-    setMeasurementTimingBudget(33000); // 33ms标准测距
-
-    uint16_t distance;
-    // 主循环
+    // tof_output_init();
+    // if (!initVL53L0X(1, &hi2c2)) {
+    //     printf("VL53L0X初始化失败\r\n");
+    //
+    // }
+    // printf("VL53L0X初始化成功\r\n");
+    //
+    // setMeasurementTimingBudget(33000); // 33ms标准测距
+    //
+    // uint16_t distance;
+    // // 主循环
     for (;;)
     {
-        // distance = readRangeSingleMillimeters(&distanceStr);
-        //
-        // if (timeoutOccurred() || distance > 2000) { // 超过2米判异常
-        //     printf("测距失败/超出范围\r\n");
-        // } else {
-        //     printf("距离: %u mm\r\n", distance);
-        // }
-        // HAL_Delay(100); // 10Hz输出
+        MPU6050_ReadRaw(&mpu);
+        IMU_Pose_Update(&car_pose, &mpu);
 
+        // 现在car_pose.roll/pitch/yaw即为实时姿态角，单位°
+        // 打印测试
+        printf("roll: %.2f, pitch: %.2f, yaw: %.2f\r\n", car_pose.roll, car_pose.pitch, car_pose.yaw);
+
+        // tof_output_loop();
         // uint16_t distance = readRangeSingleMillimeters(NULL);
         // if (timeoutOccurred() || distance > 2000) {  // 大于2米都是异常
         //     printf("测距失败或超出范围\r\n");
@@ -114,7 +84,7 @@ void MotorTask(void *argument)
         // }
         // HAL_Delay(100);
         // Key_Test_Task();
-        HAL_Delay(1); // 10ms轮询，防止刷屏
+        // HAL_Delay(1); // 10ms轮询，防止刷屏
         // 更新PID控制
         // if (MPU6050_ReadRaw(&mpu) == 0)
         // {

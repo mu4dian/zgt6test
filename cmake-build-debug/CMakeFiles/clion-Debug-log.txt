@@ -1,19 +1,29 @@
-"D:\Applications\CLion 2024.2.2\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=D:/ToolChain/GUN_Arm_Embedded/bin/arm-none-eabi-gcc.exe -DCMAKE_CXX_COMPILER=D:/ToolChain/GUN_Arm_Embedded/bin/arm-none-eabi-g++.exe -G "MinGW Makefiles" -S C:\Users\mu4dian\Desktop\zgt6test -B C:\Users\mu4dian\Desktop\zgt6test\cmake-build-debug
+C:\Applications\CLion\bin\cmake\win\x64\bin\cmake.exe -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=C:/Applications/CLion/bin/ninja/win/x64/ninja.exe -DCMAKE_C_COMPILER=C:/Applications/GUN_Arm_Embedded/bin/arm-none-eabi-gcc.exe -DCMAKE_CXX_COMPILER=C:/Applications/GUN_Arm_Embedded/bin/arm-none-eabi-g++.exe -G Ninja -S C:\Project\STM32\zgt6test -B C:\Project\STM32\zgt6test\cmake-build-debug
+Build type: Debug
+-- Configuring done (0.3s)
+You have changed variables that require your cache to be deleted.
+Configure will be re-run and you may have to reset some variables.
+The following variables have changed:
+CMAKE_C_COMPILER= C:/Applications/GUN_Arm_Embedded/bin/arm-none-eabi-gcc.exe
+CMAKE_CXX_COMPILER= C:/Applications/GUN_Arm_Embedded/bin/arm-none-eabi-g++.exe
+CMAKE_C_COMPILER= C:/Applications/GUN_Arm_Embedded/bin/arm-none-eabi-gcc.exe
+CMAKE_C_COMPILER= C:/Applications/GUN_Arm_Embedded/bin/arm-none-eabi-gcc.exe
+
 -- The C compiler identification is GNU 10.3.1
 -- The CXX compiler identification is GNU 10.3.1
 -- Detecting C compiler ABI info
 -- Detecting C compiler ABI info - done
--- Check for working C compiler: D:/ToolChain/GUN_Arm_Embedded/bin/arm-none-eabi-gcc.exe - skipped
+-- Check for working C compiler: C:/Applications/GNU Arm Embedded/Toolchain10 2021.10/10 2021.10/bin/arm-none-eabi-gcc.exe - skipped
 -- Detecting C compile features
 -- Detecting C compile features - done
 -- Detecting CXX compiler ABI info
 -- Detecting CXX compiler ABI info - done
--- Check for working CXX compiler: D:/ToolChain/GUN_Arm_Embedded/bin/arm-none-eabi-g++.exe - skipped
+-- Check for working CXX compiler: C:/Applications/GNU Arm Embedded/Toolchain10 2021.10/10 2021.10/bin/arm-none-eabi-g++.exe - skipped
 -- Detecting CXX compile features
 -- Detecting CXX compile features - done
 Build type: Debug
 -- The ASM compiler identification is GNU
--- Found assembler: D:/ToolChain/GUN_Arm_Embedded/bin/arm-none-eabi-gcc.exe
--- Configuring done (8.3s)
--- Generating done (0.1s)
--- Build files have been written to: C:/Users/mu4dian/Desktop/zgt6test/cmake-build-debug
+-- Found assembler: C:/Applications/GNU Arm Embedded/Toolchain10 2021.10/10 2021.10/bin/arm-none-eabi-gcc.exe
+-- Configuring done (3.9s)
+-- Generating done (0.2s)
+-- Build files have been written to: C:/Project/STM32/zgt6test/cmake-build-debug

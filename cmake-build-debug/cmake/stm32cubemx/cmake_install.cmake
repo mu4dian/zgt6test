@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/mu4dian/Desktop/zgt6test/cmake/stm32cubemx
+# Install script for directory: C:/Project/STM32/zgt6test/cmake/stm32cubemx
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -32,8 +32,14 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
   set(CMAKE_CROSSCOMPILING "TRUE")
 endif()
 
-# Set default install directory permissions.
+# Set path to fallback-tool for dependency-resolution.
 if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "D:/ToolChain/GUN_Arm_Embedded/bin/arm-none-eabi-objdump.exe")
+  set(CMAKE_OBJDUMP "C:/Applications/GNU Arm Embedded/Toolchain10 2021.10/10 2021.10/bin/arm-none-eabi-objdump.exe")
 endif()
 
+string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
+       "${CMAKE_INSTALL_MANIFEST_FILES}")
+if(CMAKE_INSTALL_LOCAL_ONLY)
+  file(WRITE "C:/Project/STM32/zgt6test/cmake-build-debug/cmake/stm32cubemx/install_local_manifest.txt"
+     "${CMAKE_INSTALL_MANIFEST_CONTENT}")
+endif()

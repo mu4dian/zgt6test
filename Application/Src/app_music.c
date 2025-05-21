@@ -41,7 +41,7 @@ Note_t song[] = {
     {NOTE_G4, 400}, {NOTE_F4, 400}, {NOTE_E4, 400}, {NOTE_D4, 400},
     {NOTE_C4, 800}, {NOTE_C4, 400}, {NOTE_D4, 400}, {NOTE_E4, 400},
     {NOTE_E4, 600}, {NOTE_D4, 200}, {NOTE_D4, 800},
-    // 继续写下去，自己DIY
+
 };
 
 #define SONG_LEN  (sizeof(song)/sizeof(song[0]))
